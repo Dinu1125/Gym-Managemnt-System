@@ -1,8 +1,12 @@
+/* eslint-disable jsx-a11y/alt-text */
 
 import { Link } from 'react-router-dom'
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
+import axios from 'axios';
 export default function Add (){
+
+  const [img, setImg] = useState();
 
     const [form, setForm] = useState({
         fullName:"",
@@ -17,6 +21,18 @@ export default function Add (){
 
     const params = useParams();
     const navigate = useNavigate();
+
+    function fileselect(event){
+      const [file] = event.target.files;
+      setImg(URL.createObjectURL(file));
+      const formData = new FormData()
+      formData.append('profileImg', event.target.files[0]);
+      axios.post("http://localhost:4000/file/uplaod",formData, {
+      }).then(res => {
+          console.log(res.data);
+          form.image=res.data;
+      })
+    }
 
     useEffect(() => {
       async function fetchData() {
@@ -179,9 +195,9 @@ export default function Add (){
                             <div className="form-group row">
                                     <label className="col-md-3 col-form-label">Profile Image: </label>
                                     <div className="col-md-9">
-                                    <input type="file" className="form-control" name="name" autoComplete="off" />
-                                    <img src={form.image} className="w-60"></img>
-                                    </div>
+                                    <input type="file"  onChange={(e) =>fileselect(e)} className="form-control" name="name" autoComplete="off" />
+                                    <img src={img} className="w-60"></img>
+                              </div>
                                     
                             </div>
                             <div className="form-group row">

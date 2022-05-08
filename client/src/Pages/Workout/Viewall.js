@@ -96,6 +96,11 @@ export default function Viewall() {
             </thead>
           <tbody>{recordList()}</tbody>
           </table>
+          <div className='col-12 text-right'>
+              <Link to = "#" className='btn btn-primary' >
+               Generate Report
+              </Link>
+          </div>
           </div>
       </div>
     )

@@ -1,10 +1,16 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useNavigate } from "react-router";
+import axios from 'axios';
 
 export default function Add (){
 
-    const [form, setForm] = useState({
+
+  const [img, setImg] = useState();
+
+  const [form, setForm] = useState({
         fullName:"",
         gender:"",
         birthDay:"",
@@ -12,10 +18,11 @@ export default function Add (){
         address:"",
         mobile:"",
         email:"",
-    });
+        image:""
+  });
 
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
+ 
  // These methods will update the state properties.
  function updateForm(value) {
     return setForm((prev) => {
@@ -23,10 +30,21 @@ export default function Add (){
     });
   }
 
-    // This function will handle the submission.
+  function fileselect(event){
+    const [file] = event.target.files;
+    setImg(URL.createObjectURL(file));
+    const formData = new FormData()
+    formData.append('profileImg', event.target.files[0]);
+    axios.post("http://localhost:4000/file/uplaod",formData, {
+    }).then(res => {
+        console.log(res.data);
+        form.image=res.data;
+    })
+  }
+
+  
   async function onSubmit(e) {
     e.preventDefault();
-
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newMember = { ...form };
 
@@ -42,7 +60,6 @@ export default function Add (){
       return;
     });
 
-    setForm({ name: "", position: "", level: "" });
     navigate("/StaffMembers/View");
   }
 
@@ -63,7 +80,7 @@ export default function Add (){
         </header>
             <div className="panel-body container-fluid">
                 <div className="example col-8">
-                    <form onSubmit={onSubmit}>
+                    <form onSubmit={onSubmit} enctype="multipart/form-data">
                         <h4 className="example-title mb-4">Personal Information</h4>
                         <hr/>
                             <div className="form-group row">
@@ -110,7 +127,7 @@ export default function Add (){
                             </div>
                             <div className="form-group row">
                                 <label className="col-md-3 col-form-label">Assign Role: </label>
-                                <div className="col-md-9">
+                                <div className="col-md-6">
                                 <select className="form-control" id='roleid' name='roleid'
                                      onChange={(e) => updateForm({ roleid: e.target.value })}
                                 >
@@ -119,6 +136,11 @@ export default function Add (){
                                     <option value="Role3">Role 3</option>
                                 </select>
                                 </div>
+                                <div className="col-md-3">
+                                  <Link to = "#" className='btn btn-primary' >
+                                    Add Role
+                                  </Link>
+                                  </div>
                             </div>
                         <h4 className="example-title mb-4">Contact Information</h4>
                         <hr/>
@@ -155,14 +177,15 @@ export default function Add (){
                             <div className="form-group row">
                                     <label className="col-md-3 col-form-label">Profile Image: </label>
                                     <div className="col-md-9">
-                                    <input type="file" className="form-control" name="name" autoComplete="off" />
-                                    </div>
+                                    <input type="file"  onChange={(e) =>fileselect(e)} className="form-control" name="name" autoComplete="off" />
+                                    <img src={img} className="w-60"></img>
+                            </div>
                             </div>
                             <div className="form-group row">
                                     <div className="col-md-9">
                                     <button type="submit" className="btn btn-primary mr-1">Save Staff</button>
                                     <button type="reset" className="btn btn-danger">Clear</button>
-                                    </div>
+                              </div>
                             </div>
                     </form>
                 </div>

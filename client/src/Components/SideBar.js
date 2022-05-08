@@ -11,7 +11,7 @@ export default class SideBar extends Component {
           <div className='divhover mw-100 p-20 mt-10'>
            <a className='h4 p-20 mw-100'>Dashboard</a>
           </div>
-          <Link to = "/StaffMembers/View" >
+          <Link to = "/MemberManagement" >
             <div className='divhover mw-100  p-20 '>
             <a className='h4 p-20 mw-100'>Member Management</a>
             </div>
