@@ -64,9 +64,9 @@ recordRoutes.route("/items/update/:id").post(function (req, response) {
     let myquery = { _id: ObjectId( req.params.id )};
     let member = {
       $set: {
-        name:req.body.name,
-        description:req.body.description,
-        price:req.body.price,
+        name:req.body.fullName,
+        description:req.body.gender,
+        price:req.body.birthDay,
         image:"",
       },
     };
